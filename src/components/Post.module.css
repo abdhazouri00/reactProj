@@ -16,6 +16,10 @@
     text-transform: uppercase;
 }
 
+.post a{
+    text-decoration: none;
+}
+
 .text {
     white-space: pre-wrap;
     font-size: 1.25rem;

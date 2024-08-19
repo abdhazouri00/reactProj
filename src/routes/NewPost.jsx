@@ -1,33 +1,14 @@
-import { useState } from "react";
 import classes from "./NewPost.module.css";
 import Modal from "../components/Modal";
-import { Link } from "react-router-dom";
+import { Link , Form , redirect } from "react-router-dom";
 
-function NewPost(props) {
-  const [enteredBody, setEnteredBody] = useState("");
-  const [enteredAuthor, setEnteredAuthor] = useState("");
-
-  function bodyChangeHandler(e) {
-    setEnteredBody(e.target.value);
-  }
-
-  function authorChangeHandler(e) {
-    setEnteredAuthor(e.target.value);
-  }
-
-  function submitHandler(e) {
-    e.preventDefault();
-    const postData = { body: enteredBody, author: enteredAuthor };
-    props.onCancel();
-    props.onAddPost(postData);
-  }
-
+function NewPost() {
   return (
     <Modal>
-      <form className={classes.form} onSubmit={submitHandler}>
+      <Form  method="POST" className={classes.form}>
         <p>
           <label htmlFor="body">Text</label>
-          <textarea id="body" required rows={3} onChange={bodyChangeHandler} />
+          <textarea id="body" required rows={3} name="body"/>
         </p>
         <p>
           <label htmlFor="name">Your name</label>
@@ -35,7 +16,7 @@ function NewPost(props) {
             type="text"
             id="name"
             required
-            onChange={authorChangeHandler}
+            name="author"
           />
         </p>
         <p className={classes.actions}>
@@ -44,9 +25,23 @@ function NewPost(props) {
           </Link>
           <button>Submit</button>
         </p>
-      </form>
+      </Form>
     </Modal>
   );
 }
 
 export default NewPost;
+
+export async function action({request}) {
+  const formData = await request.formData();
+  const postData = Object.fromEntries(formData);
+  await fetch("http://localhost:8080/posts", {
+    method: "POST",
+    body: JSON.stringify(postData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return redirect('/');
+}

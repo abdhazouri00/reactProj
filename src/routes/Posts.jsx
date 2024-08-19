@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import PostsList from "../components/PostsList";
 import "../style.css"
 import { Outlet } from "react-router-dom";
